@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BestLap {
+  id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  driverName              String   @map("driver_name") @db.Text
+  bestLap                 Decimal  @map("best_lap") @db.Decimal
+  trackName               String?  @map("track_name") @db.Text
+  createdAt               DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  physicsValidationPassed Boolean  @default(false) @map("physics_validation_passed")
+  baseSpeedMultiplier     Decimal? @map("base_speed_multiplier") @db.Decimal
+  baseTurnSpeed           Decimal? @map("base_turn_speed") @db.Decimal
+  frameTimeMs             Decimal? @map("frame_time_ms") @db.Decimal
+  carScaleRatio           Decimal? @map("car_scale_ratio") @db.Decimal
+  bestLapTrace            Json?    @map("best_lap_trace") @db.JsonB
+  clientIp                String?  @map("client_ip") @db.Text
+  valid                   Boolean  @default(true) @map("valid")
+
+  @@index([createdAt], map: "best_laps_created_at_idx")
+  @@index([driverName], map: "best_laps_driver_name_idx")
+  @@index([clientIp], map: "best_laps_client_ip_idx")
+  @@map("best_laps")
+}
+
+model SubmittedTrack {
+  id        BigInt   @id @default(autoincrement()) @db.BigInt
+  name      String   @db.Text
+  trackCode String   @map("track_code") @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([createdAt(sort: Desc)], map: "idx_submitted_tracks_created_at")
+  @@map("submitted_tracks")
+}
+
+model TrackFunction {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trackId       Int      @map("track_id") @db.Integer
+  trackFunction String   @map("track_function") @db.Text
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([trackId], map: "track_functions_track_id_idx")
+  @@index([createdAt], map: "track_functions_created_at_idx")
+  @@map("track_functions")
+}
+
+model Wrapped {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  year      Int      @db.Integer
+  username  String   @db.Text
+  dataJson  Json     @map("data_json") @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@unique([year, username], map: "wrapped_year_username_unique")
+  @@index([year], map: "wrapped_year_idx")
+  @@index([username], map: "wrapped_username_idx")
+  @@index([createdAt], map: "wrapped_created_at_idx")
+  @@map("wrapped")
+}
+
+model Feedback {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ip        String   @db.Text
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([createdAt], map: "feedback_created_at_idx")
+  @@map("feedback")
+}
+
+model BannedIp {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ip        String   @unique @db.Text
+  reason    String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([ip], map: "banned_ips_ip_idx")
+  @@map("banned_ips")
+}

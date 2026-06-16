@@ -1,0 +1,3792 @@
+@media (max-width: 600px) {
+  body {
+    padding-top: 2px !important;
+    margin-top: 0 !important;
+  }
+
+  .pixel-title-box {
+    margin-bottom: 0 !important;
+    margin-top: 2px !important;
+    /* Increased for clear visibility */
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .pixel-title-text,
+  h1.fade-in {
+    line-height: 1 !important;
+    margin-bottom: -2px !important;
+    /* Negative margin to reduce spacing */
+    margin-top: -8px !important;
+    padding: 8px !important;
+  }
+
+  .tagline.fade-in {
+    margin-top: -5px !important;
+    /* Negative margin to pull up toward title */
+    margin-bottom: 5px !important;
+    /* Add spacing between tagline and next track text */
+    line-height: 1 !important;
+    padding: 0 !important;
+    font-size: 0.85rem !important;
+    /* Changed from 1rem to 0.75rem */
+  }
+
+  #next-track-time.fade-in {
+    margin-top: 0 !important;
+    margin-bottom: 3px !important;
+    /* Ensure spacing before game container */
+    line-height: 1 !important;
+    padding: 3px !important;
+    font-size: 0.75rem !important;
+    /* Changed from 1rem to 0.75rem */
+  }
+
+  /* Remove .game-container overrides and instead target .game-ui, .game-screen, and #gameCanvas for spacing reduction */
+  .game-ui {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .game-screen {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .gameCanvas {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    display: block;
+  }
+}
+
+/* Prevent Border Shifting on Hover - Comprehensive Fix */
+.game-container,
+.game-screen,
+.pixel-button,
+select,
+input,
+button {
+  /* Use stable transform baseline to prevent layout shifts */
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+/* Ensure no unexpected layout shifts from transforms - excluding positioned elements */
+.game-ui,
+.game-ui *,
+.controls-panel,
+.controls-panel * {
+  backface-visibility: hidden;
+}
+
+/* Exclude absolutely positioned elements like Discord icon */
+.x-emoji-link,
+.x-emoji-link * {
+  backface-visibility: visible !important;
+}
+
+/* Override any remaining transform effects that could shift borders */
+.game-screen:hover,
+.pixel-button:hover,
+select:hover,
+input:hover,
+button:hover,
+#startButton:hover,
+.modal-close:hover {
+  /* Force stable positioning - no translate transforms */
+  transform: translateZ(0) !important;
+}
+
+/* Pixel title box for HOTLAP DAILY */
+.pixel-title-box {
+  border: none !important;
+  display: inline-block !important;
+  padding: 0 !important;
+  background: transparent !important;
+  margin-bottom: 4px !important;
+  margin-top: 10px !important;
+  /* Ensures desktop spacing is always visible */
+}
+
+.pixel-title-text {
+  font-family: "Tiny5", sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+  background: transparent;
+  /* Changed from white to transparent to match parent */
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.pixel-title-text strong {
+  font-family: "Tiny5", sans-serif !important;
+  font-weight: 400 !important;
+}
+
+
+@media (max-width: 1300px) {
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    background: rgba(255, 255, 255, 0.97);
+    z-index: 100;
+    margin-top: 0;
+    padding: 10px 0 8px 0;
+    font-size: 0.85em;
+    box-shadow: 0 -2px 8px #0001;
+  }
+
+  .game-container {
+    margin-bottom: 48px;
+    /* Add space for footer */
+  }
+}
+
+html,
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  flex: 1;
+}
+
+footer {
+  text-align: center;
+  margin-top: 32px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95em;
+  color: #aaa;
+}
+
+footer a {
+  color: #aaa;
+  text-decoration: underline;
+  margin-right: 18px;
+}
+
+footer a:last-child {
+  margin-right: 0;
+}
+
+/* Constructor Selection Modal & Custom Select (ported from index.html) */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-container select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding-right: 30px;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: none !important;
+}
+
+input:hover,
+select:hover {
+  transform: none !important;
+  background-color: var(--bg-secondary) !important;
+  box-shadow: none !important;
+}
+
+input,
+select {
+  transition: none !important;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: none;
+  cursor: pointer;
+  z-index: 10;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.select-arrow:hover,
+.select-arrow:active,
+.select-arrow.glow {
+  background: white;
+  border: 1px solid black;
+  box-shadow: 0 0 10px #0066FF, 0 0 20px #0066FF;
+  transform: translateY(-50%);
+}
+
+.select-arrow:after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 5px solid black;
+  transition: none;
+}
+
+.constructor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.constructor-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.constructor-modal.active .constructor-card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.constructor-modal.closing {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.constructor-modal.closing .constructor-card {
+  transform: scale(0.7);
+  opacity: 0;
+}
+
+.constructor-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 320px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.7);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.constructor-card h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.constructor-option {
+  display: block;
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--text-primary);
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.constructor-option:hover {
+  background: var(--surface);
+  box-shadow: 0 0 5px #89CFF0, 0 0 10px #89CFF0;
+  transform: translateY(-1px);
+}
+
+.constructor-option.selected {
+  background: #89CFF0;
+  color: white;
+  border-color: #89CFF0;
+}
+
+.constructor-option:last-child {
+  margin-bottom: 0;
+}
+
+.constructor-modal .modal-close.pixel-button {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  color: var(--text-primary);
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-size: 16px !important;
+}
+
+.constructor-modal .modal-close.pixel-button:hover {
+  background: var(--surface) !important;
+  color: var(--highlight-blue);
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+.constructor-modal .modal-close.pixel-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 600px) {
+  .constructor-card {
+    padding: 16px;
+    margin: 10px;
+  }
+
+  .constructor-option {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F8F8;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --accent: #000000;
+  --accent-hover: #333333;
+  --border: #000000;
+  --surface: #F1F1F1;
+  --mercedes-color: #C0C0C0;
+  --williams-color: #0C2340;
+  --highlight-blue: #0066FF;
+}
+
+/* Dark mode variables */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #252525;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --accent: #ffffff;
+  --accent-hover: #cccccc;
+  --border: #ffffff;
+  --surface: #2a2a2a;
+  --highlight-blue: #66b3ff;
+}
+
+[data-theme="dark"] .game-screen {
+  background: #1a1a1a !important;
+}
+
+[data-theme="dark"] #sidePanel {
+  background: #252525 !important;
+}
+
+[data-theme="dark"] #sidePanel a,
+[data-theme="dark"] #sidePanel button,
+[data-theme="dark"] #sidePanel span {
+  color: #ffffff !important;
+}
+
+/* Social icons modal */
+.social-icon-link:hover {
+  transform: scale(1.1) !important;
+}
+
+[data-theme="dark"] .social-icon-link {
+  background: #252525 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .social-icon-link svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
+/* Keep X icon using invert filter (it works well) */
+[data-theme="dark"] .social-icon-link:nth-child(2) svg {
+  filter: invert(1);
+  color: inherit;
+  stroke: inherit;
+}
+
+/* Dark mode toggle switch */
+
+.theme-toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 2px solid #222;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .theme-toggle-switch {
+  background: #4a4a4a;
+  border-color: #fff;
+}
+
+.theme-toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #222;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+[data-theme="dark"] .theme-toggle-slider {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.theme-toggle-slider::before {
+  content: '☀️';
+  font-size: 9px;
+  transition: opacity 0.2s ease;
+}
+
+[data-theme="dark"] .theme-toggle-slider::before {
+  content: '🌙';
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'IBM Plex Mono', monospace;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+input,
+select,
+textarea {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Typography */
+h1,
+.tagline,
+.leaderboard-title,
+.best-lap,
+.previous-lap,
+#lap-timer,
+.key,
+.action,
+#shareButton,
+.share-icon,
+.pixel-button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+html,
+body {
+  background-color: var(--bg-primary);
+  height: 100%;
+  overflow: hidden;
+  /* Prevent overall scrolling */
+}
+
+/* Allow scrolling for leaderboard page */
+.leaderboard-page {
+  overflow-y: auto !important;
+  height: 100vh !important;
+}
+
+.leaderboard-page body {
+  overflow-y: auto !important;
+}
+
+/* Override body overflow for leaderboard page */
+body:has(.leaderboard-page) {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+/* Override html overflow for leaderboard page */
+html:has(.leaderboard-page) {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+/* Allow scrolling for wrapped page */
+body:has(.wrapped-container) {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+html:has(.wrapped-container) {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  overflow: hidden;
+  /* Prevent body scrolling */
+}
+
+@media (max-width: 800px) {
+  body {
+    overflow: hidden;
+    /* Prevent scrolling */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+}
+
+/* Layout */
+.game-container {
+  width: 50%;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem auto;
+  /* Reduced from 2rem to 1rem (50% reduction) */
+  padding: 1rem;
+  box-sizing: border-box;
+  gap: 1rem;
+}
+
+@media (max-width: 800px) {
+  .game-container {
+    width: 100%;
+    /* Full width */
+    height: 100vh;
+    /* Full viewport height */
+    margin: 0;
+    padding: 0.5rem 0.5rem 0;
+    /* Remove bottom padding */
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.game-ui {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 0;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  max-height: 75vh;
+  /* Increased to match other elements */
+  box-shadow: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (max-width: 800px) {
+  .game-ui {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: none;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  /* Adjust the order of elements for mobile */
+  .controls-panel {
+    order: 2;
+    /* Display after game screen */
+    position: relative;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0 auto;
+    height: auto;
+    max-height: 30vh;
+    /* Reduced from 35vh to 30vh to give more space to game screen */
+    padding: 0.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 10;
+  }
+
+  .game-screen {
+    order: 1;
+    /* Display before controls panel */
+    flex: 1;
+    min-height: 0;
+    height: 60vh;
+    /* Increased from 55vh to 60vh to take advantage of saved label space */
+    margin-bottom: 0.5rem;
+    padding: 0 !important;
+    /* Remove padding to maximize space */
+    position: relative;
+    /* For absolute positioning of mobile stats */
+  }
+
+  /* Mobile-specific canvas optimization */
+  #gameCanvas {
+    width: 100% !important;
+    height: calc(100% - 54px) !important;
+    /* Account for larger mobile stats bar height */
+    margin-top: 54px !important;
+    /* Push canvas below larger mobile stats */
+    transition: all 0.3s ease !important;
+    /* Smooth transitions for collapse/expand */
+  }
+
+  /* Adjust canvas for collapsed state - no stats bar taking space */
+  .mobile-top-stats.collapsed~#gameCanvas,
+  .game-screen:has(.mobile-top-stats.collapsed) #gameCanvas {
+    height: 100% !important;
+    /* Full height since no stats bar */
+    margin-top: 0 !important;
+    /* No margin since no stats bar */
+  }
+
+  /* Hide floating in-game leaderboard on mobile */
+  .in-game-leaderboard {
+    display: none !important;
+  }
+
+  /* Hide regular stats on mobile */
+  .game-screen .stats {
+    display: none !important;
+  }
+
+  /* Mobile top stats bar - 3 grid layout with prioritized timing data */
+  .mobile-top-stats {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+    background: var(--bg-primary) !important;
+    border-bottom: 6px solid rgba(233, 233, 233, 0.4) !important;
+    /* 40% opacity border - 3x thickness */
+    display: grid !important;
+    grid-template-columns: 1.4fr 1fr !important;
+    /* Two columns: left (times) and right (rank/timer) */
+    padding: 0.48rem 0.6rem !important;
+    /* Increased from 0.4rem/0.5rem (20% more) */
+    gap: 0.3rem !important;
+    /* Slightly reduced gap for more space */
+    font-family: 'IBM Plex Mono', monospace !important;
+    min-height: 54px !important;
+    /* Increased from 45px (20% more) */
+    overflow-x: visible !important;
+    /* Allow horizontal overflow for lap times */
+    overflow-y: hidden !important;
+    /* Prevent vertical overflow */
+    transition:
+      min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      padding 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.4s ease,
+      border 0.4s ease,
+      opacity 0.3s ease !important;
+    /* Smoother, longer transitions with better easing */
+  }
+
+  /* Collapsed state - completely hide stats bar, show only timer floating on right */
+  .mobile-top-stats.collapsed {
+    background: transparent !important;
+    /* Remove background */
+    border: none !important;
+    /* Remove border */
+    min-height: 0 !important;
+    /* No height */
+    padding: 0 !important;
+    /* No padding */
+    grid-template-columns: 0 auto !important;
+    /* Hide left column, show only timer on right */
+    justify-items: end !important;
+    /* Align timer to right */
+    opacity: 0.9 !important;
+    /* Slight transparency for smoother transition */
+  }
+
+  /* Hide left section when collapsed with smooth fade */
+  .mobile-top-stats.collapsed .mobile-stats-left {
+    opacity: 0 !important;
+    transform: translateX(-20px) !important;
+    pointer-events: none !important;
+    transition:
+      opacity 0.3s ease,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Smooth transition for stats left when expanded */
+  .mobile-stats-left {
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Position timer on top-right when collapsed */
+  .mobile-top-stats.collapsed .mobile-stats-right {
+    position: fixed !important;
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    background: var(--bg-primary) !important;
+    border: 1px solid rgba(139, 139, 139, 0.5) !important;
+    border-radius: 4px !important;
+    padding: 0.2rem 0.4rem !important;
+    z-index: 100 !important;
+  }
+
+  /* Show only timer in collapsed right section */
+  .mobile-top-stats.collapsed .mobile-stats-right .mobile-rank {
+    opacity: 0 !important;
+    transform: scale(0.8) !important;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Smooth transitions for rank when expanded */
+  .mobile-rank {
+    transition:
+      opacity 0.4s ease 0.1s,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s !important;
+  }
+
+  /* Hide sections when collapsed */
+  .mobile-top-stats.collapsed .mobile-stats-left,
+  .mobile-top-stats.collapsed .mobile-stats-right .mobile-rank {
+    display: none !important;
+  }
+
+  /* Position timer in collapsed state */
+  .mobile-top-stats.collapsed .mobile-stats-right {
+    justify-content: flex-end !important;
+    align-items: center !important;
+    grid-column: 2 !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Smooth transitions for stats right section */
+  .mobile-stats-right {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .mobile-top-stats.collapsed .mobile-timer {
+    margin: 0 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Smooth timer transitions */
+  .mobile-timer {
+    transition: all 0.3s ease !important;
+  }
+
+  /* Minimize/Expand button positioned below stats bar */
+  .mobile-stats-toggle {
+    position: fixed !important;
+    top: 3rem !important;
+    /* Align with top edge */
+    right: 0.5rem !important;
+    /* Positioned on the right */
+    transform: none !important;
+    width: 25.6px !important;
+    /* Reduced by 20% from 32px */
+    height: 16px !important;
+    /* Reduced by 20% from 20px */
+    background: white !important;
+    color: black !important;
+    border: 2px solid black !important;
+    cursor: pointer !important;
+    display: none !important;
+    /* Hidden by default, shown only on mobile */
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    /* Reduced proportionally */
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    z-index: 9999 !important;
+    /* Very high z-index */
+    transition:
+      background-color 0.2s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.2s ease !important;
+    user-select: none !important;
+    line-height: 1 !important;
+  }
+
+  .mobile-stats-toggle:hover {
+    background: #f0f0f0 !important;
+    color: black !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .mobile-stats-toggle:active {
+    transform: scale(0.95) !important;
+  }
+
+  .mobile-stats-toggle:active {
+    background: #e0e0e0 !important;
+  }
+
+  /* Show toggle button when mobile stats are visible */
+  .mobile-top-stats[style*="block"]~.mobile-stats-toggle,
+  .mobile-top-stats[style*="grid"]~.mobile-stats-toggle {
+    display: flex !important;
+  }
+
+  /* Keep button on left when collapsed, move up to top level */
+  .mobile-top-stats.collapsed~.mobile-stats-toggle {
+    top: 0.5rem !important;
+    left: 0.5rem !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  /* Left section - Best/Previous times with prioritized space */
+  .mobile-stats-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.24rem !important;
+    /* Increased from 0.2rem (20% more) */
+    overflow: visible !important;
+    /* Allow overflow to show full times */
+    min-width: 0 !important;
+    /* Allow shrinking */
+    flex-shrink: 0 !important;
+    /* Prevent shrinking to preserve lap times */
+    position: relative !important;
+    z-index: 2 !important;
+    /* Ensure left sits above center */
+  }
+
+  .mobile-best-lap {
+    color: var(--highlight-blue) !important;
+    font-weight: 600 !important;
+    font-size: 0.864rem !important;
+    /* Reduced by 10% from 0.96rem */
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    /* Prevent wrapping */
+    /* Ensure full lap times are visible - no constraints */
+    overflow: visible !important;
+    /* Show all digits */
+    text-overflow: unset !important;
+    /* No ellipsis for critical timing data */
+  }
+
+  .mobile-previous-lap {
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 0.81rem !important;
+    /* Reduced by 10% from 0.9rem */
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    /* Prevent wrapping */
+    /* Ensure full lap times are visible - no constraints */
+    overflow: visible !important;
+    /* Show all digits */
+    text-overflow: unset !important;
+    /* No ellipsis for critical timing data */
+  }
+
+  /* Center sparkline removed on mobile */
+
+  /* Right section - Rank and Timer with bigger fonts and better emoji alignment */
+  .mobile-stats-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 0.24rem !important;
+    /* Increased from 0.2rem (20% more) */
+    overflow: hidden !important;
+    /* Prevent overflow */
+    min-width: 0 !important;
+    /* Allow shrinking */
+    position: relative !important;
+    z-index: 2 !important;
+    /* Ensure right sits above center */
+  }
+
+  .mobile-rank {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 0.96rem !important;
+    /* Increased from 0.8rem (20% more) */
+    line-height: 1.1 !important;
+    text-align: right !important;
+    white-space: nowrap !important;
+    /* Prevent wrapping */
+    overflow: hidden !important;
+    /* Hide overflow */
+    text-overflow: ellipsis !important;
+    /* Show ... if too long */
+    max-width: 100% !important;
+    /* Constrain to container */
+    display: flex !important;
+    /* Use flexbox for emoji alignment */
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.3rem !important;
+    /* Space between emoji and text */
+  }
+
+  .mobile-rank-number {
+    color: var(--highlight-blue) !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    /* Keep consistent with surrounding text */
+    font-variant-numeric: tabular-nums !important;
+    /* Consistent digit width like other timings */
+    font-size: inherit !important;
+    /* Match surrounding font size */
+    line-height: inherit !important;
+    /* Keep vertical rhythm consistent */
+  }
+
+  /* Dark mode override for rank number */
+  [data-theme="dark"] .mobile-rank-number {
+    color: #ffffff !important;
+  }
+
+  .mobile-timer {
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 0.864rem !important;
+    /* Reduced by 10% from 0.96rem */
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    /* Prevent wrapping - keeps time(DNF) on single line */
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.15rem !important;
+    /* Slightly reduced gap to fit time(DNF) format */
+  }
+
+  .mobile-lap-timer {
+    font-size: 0.864rem !important;
+    /* Reduced by 10% from 0.96rem */
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    /* Same color as previous lap */
+    text-align: right !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    /* Prevent wrapping - keeps time(DNF) on single line */
+    overflow: hidden !important;
+    /* Hide overflow */
+    text-overflow: ellipsis !important;
+    /* Show ... if too long */
+    max-width: 100% !important;
+    /* Constrain to container */
+    display: flex !important;
+    /* Use flexbox for emoji alignment */
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.15rem !important;
+    /* Slightly reduced gap to fit time(DNF) format */
+  }
+
+  /* Emoji alignment for right column with bigger size */
+  .mobile-emoji {
+    display: inline-block !important;
+    width: 1.2em !important;
+    /* Increased from 1em (20% more) */
+    text-align: center !important;
+    flex-shrink: 0 !important;
+    /* Don't shrink emojis */
+  }
+
+  /* Prevent mobile keyboard layout shifts */
+  .input-group input,
+  .custom-select-container select {
+    transform: translateZ(0);
+    /* Force hardware acceleration */
+    will-change: auto;
+    /* Optimize for potential changes */
+  }
+
+  /* Hide labels on mobile to save space */
+  .input-group label {
+    display: none;
+  }
+
+  /* Add placeholders for mobile */
+  #driverName::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+  }
+}
+
+/* Typography */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  padding: 0.5rem 0 0;
+  margin-bottom: 0.15rem;
+  line-height: 1;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+}
+
+@media (max-width: 800px) {
+  h1 {
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    padding: 0.5rem 0;
+    z-index: 2;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+}
+
+h1 strong {
+  display: inline-block;
+  border: none;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.15rem;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: -0.01em;
+  padding: 0 0.25rem;
+}
+
+@media (max-width: 800px) {
+  .tagline {
+    position: sticky;
+    top: 2.5rem;
+    background: var(--bg-primary);
+    padding-bottom: 0.5rem;
+    z-index: 2;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Game screen */
+.game-screen {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: #FFFFFF;
+  /* Changed from var(--bg-secondary) to pure white */
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.25rem;
+  max-height: 75vh;
+}
+
+.game-screen:hover {
+  /* Removed layout-shifting transform */
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: none;
+}
+
+@media (max-width: 800px) {
+  .game-screen {
+    flex: 1;
+    min-height: 0;
+    /* Allow it to shrink if needed */
+    height: 55vh;
+    /* Fixed height instead of calc */
+    margin-bottom: 0.5rem;
+    /* Space before control panel */
+  }
+}
+
+#gameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+@media (max-width: 800px) {
+  #gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+/* Stats and UI elements */
+.stats {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+@media (max-width: 800px) {
+  .stats {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+    left: auto;
+    z-index: 15;
+    width: auto;
+    max-width: none;
+  }
+}
+
+#lap-timer {
+  padding: 0.6rem 1rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  box-shadow: none;
+  text-align: center;
+  width: 100%;
+}
+
+#next-track-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: -0.01em;
+  padding: 0 0.25rem;
+}
+
+@media (max-width: 800px) {
+  #lap-timer {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.98);
+    border: 2px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    min-width: 100px;
+    text-align: center;
+    display: block !important;
+    /* Ensure it's always displayed */
+    opacity: 1 !important;
+    /* Ensure it's visible */
+  }
+
+  #next-track-time {
+    position: sticky;
+    top: 4rem;
+    background: var(--bg-primary);
+    padding-bottom: 0.5rem;
+    z-index: 2;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+  }
+}
+
+#leaderboard {
+  margin-top: auto;
+  padding: 0.8rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  box-shadow: none;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  #leaderboard {
+    margin: 0;
+    padding: 0.35rem;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.best-lap {
+  color: var(--highlight-blue);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 800px) {
+  .best-lap {
+    font-size: 0.8rem;
+    margin-bottom: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+}
+
+.previous-lap {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  padding-top: 0;
+}
+
+.leaderboard-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#lap-times {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* In-game leaderboard */
+.in-game-leaderboard {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: none;
+  /* Hidden by default */
+  flex-direction: column;
+  z-index: 100;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.in-game-leaderboard.visible {
+  display: flex;
+  /* Show when this class is added */
+}
+
+.leaderboard-content {
+  padding: 0.3rem 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.leaderboard-collapse {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  font-size: 1rem;
+  line-height: 1;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  /* Remove blue highlights */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.leaderboard-collapse:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-collapse:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.95);
+}
+
+.leaderboard-collapse:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.collapse-icon {
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
+.leaderboard-collapse:hover .collapse-icon {
+  transform: scale(1.05);
+}
+
+.leaderboard-collapse:active .collapse-icon {
+  transform: scale(0.9);
+}
+
+/* Collapsed state - rotate chevron 180 degrees */
+.in-game-leaderboard.collapsed .collapse-icon {
+  transform: rotate(180deg);
+}
+
+.in-game-leaderboard.collapsed .leaderboard-collapse:hover .collapse-icon {
+  transform: rotate(180deg) scale(1.05);
+}
+
+.in-game-leaderboard.collapsed .leaderboard-collapse:active .collapse-icon {
+  transform: rotate(180deg) scale(0.9);
+}
+
+/* Collapsed state */
+.in-game-leaderboard.collapsed {
+  min-width: auto;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.in-game-leaderboard.collapsed .leaderboard-content {
+  padding: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.in-game-leaderboard.collapsed #in-game-lap-times {
+  display: none;
+}
+
+.in-game-leaderboard.collapsed .leaderboard-collapse {
+  position: static;
+  top: auto;
+  right: auto;
+}
+
+@media (max-width: 800px) {
+  .in-game-leaderboard {
+    top: 15px;
+    left: 15px;
+    font-size: 0.85rem !important;
+    min-width: 100px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .in-game-leaderboard.collapsed {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+  }
+
+  .in-game-leaderboard.collapsed .leaderboard-content {
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .leaderboard-content {
+    padding: 0.175rem 0.25rem;
+  }
+
+  .leaderboard-collapse {
+    top: 0.15rem;
+    right: 0.15rem;
+    padding: 1px;
+    /* Remove blue highlights on mobile */
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  .in-game-best-lap {
+    font-size: 0.85rem !important;
+  }
+
+  .in-game-previous-lap {
+    font-size: 0.8rem !important;
+  }
+}
+
+#in-game-lap-times {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.in-game-best-lap {
+  color: var(--highlight-blue);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0;
+}
+
+.in-game-rank {
+  font-weight: 600;
+  color: #111;
+  margin-right: 15px;
+}
+
+/* Dark mode override for in-game rank */
+[data-theme="dark"] .in-game-rank {
+  color: #ffffff;
+}
+
+.in-game-previous-lap {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0;
+}
+
+.in-game-sparkline {
+  font-family: monospace;
+  letter-spacing: 0.1em;
+  font-size: 1rem;
+  line-height: 1;
+  color: #A9A9A9;
+  /* Default gray color for all laps */
+  margin: 0;
+  white-space: pre;
+  opacity: 1;
+}
+
+.in-game-sparkline .best-lap {
+  color: purple;
+  /* Purple color for the best lap */
+}
+
+@media (max-width: 800px) {
+  .in-game-sparkline {
+    font-size: 0.85rem;
+    margin: 0.05rem 0 0.15rem 0;
+  }
+}
+
+/* Form elements */
+select,
+input {
+  width: 100%;
+  padding: 0.4rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  transition: all 0.1s ease;
+  margin-bottom: 0.15rem;
+  min-width: 0;
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+select:hover,
+input:hover {
+  background-color: var(--bg-primary);
+  /* Removed layout-shifting transform */
+  border-color: var(--text-secondary);
+  box-shadow: none;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+/* Placeholder styling */
+input::placeholder,
+select option[disabled] {
+  color: #999;
+  opacity: 1;
+  font-style: normal;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+input:focus::placeholder {
+  color: #bbb;
+}
+
+/* Custom select placeholder styling - Desktop keeps original labels */
+@media (max-width: 800px) {
+
+  /* Mobile-only placeholder styling for input */
+  input::placeholder {
+    color: #999;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* Custom select container for mobile */
+  .custom-select-container {
+    position: relative;
+  }
+
+  /* Removed overlapping constructor labels on mobile */
+  .custom-select-container::before {
+    display: none;
+  }
+
+  .custom-select-container.has-value::before {
+    display: none;
+  }
+
+  /* Constructor prefix element styling removed - no longer needed */
+
+  /* Ensure select text shows above placeholder - Mobile only */
+  .custom-select-container select {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-secondary);
+  }
+
+  .custom-select-container.has-value select {
+    background: var(--bg-secondary);
+    padding-left: 6.5rem;
+    /* Adjust for smaller mobile text */
+    color: var(--text-primary);
+  }
+
+  .custom-select-container select:focus,
+  .custom-select-container select:hover {
+    padding-left: 0.35rem;
+    /* Reset padding for mobile when focused/hovered */
+  }
+
+  .custom-select-container select:focus+.select-arrow::before,
+  .custom-select-container select:hover+.select-arrow::before {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 800px) {
+
+  select,
+  input,
+  .pixel-button {
+    padding: 0.25rem;
+    /* Reduced from 0.35rem */
+    font-size: 0.75rem;
+    /* Reduced from 0.8rem */
+    margin-bottom: 0.1rem;
+    /* Reduced from 0.15rem */
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 0.05rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  /* Slightly larger on desktop */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  /* Match heavier headings */
+}
+
+/* Buttons */
+.pixel-button {
+  width: 100%;
+  padding: 0.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0.07rem 0;
+  /* Further reduced from 0.1rem by 30% */
+}
+
+@media (max-width: 800px) {
+  .pixel-button {
+    margin: 0.05rem 0;
+    /* Further reduced on mobile */
+  }
+}
+
+/* Desktop-only spacing under Ghost Settings button */
+@media (min-width: 769px) {
+  #ghostSettingsBtn {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Input group styling */
+.input-group {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .input-group {
+    margin-bottom: 0.01rem;
+    /* Reduced by 50% from 0.02rem */
+  }
+}
+
+/* Desktop-only right margin for ghost button container in constructor section */
+@media (min-width: 769px) {
+  .ghost-button-container {
+    margin-right: 2rem !important;
+  }
+
+  /* Add padding to the constructor input row to ensure space */
+  .constructor-input-row {
+    padding-right: 1rem;
+  }
+
+  /* Move dropdown arrow up on desktop only */
+  .select-arrow {
+    top: 40%;
+  }
+
+  /* Remove top margin from ghost button on desktop */
+  #ghostSettingsBtn {
+    margin-top: 0 !important;
+  }
+}
+
+/* Mobile-specific styling for ghost settings button */
+@media (max-width: 800px) {
+  #ghostSettingsBtn {
+    margin-right: 0.8rem !important;
+    /* Add right margin for mobile to make it even */
+    height: 35px !important;
+    /* Match reduced mobile touch target height */
+    min-height: 35px !important;
+    /* Override inline styles */
+  }
+}
+
+/* Desktop ghost car text positioning */
+@media (min-width: 769px) {
+  #web-ghost-driver {
+    margin-bottom: 0.5rem !important;
+    text-align: center !important;
+  }
+}
+
+.pixel-button:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  /* Removed layout-shifting transform */
+  filter: brightness(1.05);
+  box-shadow: none;
+}
+
+.pixel-button:active {
+  /* Removed layout-shifting transform */
+  filter: brightness(0.95);
+  background: var(--bg-secondary);
+  box-shadow: none;
+}
+
+.pixel-button.glow {
+  animation: glowingButton 2s infinite;
+  background: var(--bg-primary);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Blue glow for normal start state */
+#startButton {
+  color: var(--highlight-blue);
+  border-color: var(--highlight-blue);
+  animation: blueGlowingButton 2s infinite;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: var(--bg-primary);
+  transition: all 0.1s ease;
+  margin-bottom: 0.035rem;
+  /* Reduced by 50% from 0.07rem */
+}
+
+#startButton:hover {
+  /* Removed layout-shifting transform */
+  filter: brightness(1.05);
+  box-shadow: none;
+}
+
+#startButton:active {
+  background: var(--highlight-blue);
+  color: var(--bg-primary);
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+#startButton.crash-glow {
+  color: #D10000;
+  /* Bright, prominent red for text */
+  border-color: #FF0000;
+  /* Keep bright red for border */
+  animation: redGlowingButton 2s infinite;
+  background: var(--bg-primary);
+}
+
+#startButton.crash-glow:hover {
+  background: var(--bg-primary);
+  color: #D10000;
+  /* Keep same red on hover */
+}
+
+#startButton.crash-glow:active {
+  background: #D10000;
+  /* Use same red for pressed state */
+  color: var(--bg-primary);
+}
+
+/* Updated glowing animations */
+@keyframes blueGlowingButton {
+  0% {
+    box-shadow: 0 0 3px var(--highlight-blue),
+      0 0 5px var(--highlight-blue);
+    border-color: var(--highlight-blue);
+  }
+
+  50% {
+    box-shadow: 0 0 6px var(--highlight-blue),
+      0 0 10px var(--highlight-blue);
+    border-color: var(--highlight-blue);
+  }
+
+  100% {
+    box-shadow: 0 0 3px var(--highlight-blue),
+      0 0 5px var(--highlight-blue);
+    border-color: var(--highlight-blue);
+  }
+}
+
+@keyframes greenGlowingButton {
+  0% {
+    box-shadow: 0 0 3px #32CD32,
+      0 0 5px #32CD32;
+    border-color: #32CD32;
+  }
+
+  50% {
+    box-shadow: 0 0 6px #32CD32,
+      0 0 10px #32CD32;
+    border-color: #32CD32;
+  }
+
+  100% {
+    box-shadow: 0 0 3px #32CD32,
+      0 0 5px #32CD32;
+    border-color: #32CD32;
+  }
+}
+
+@keyframes redGlowingButton {
+  0% {
+    box-shadow: 0 0 4px #FF0000,
+      0 0 8px #FF0000;
+    border-color: #FF0000;
+  }
+
+  50% {
+    box-shadow: 0 0 8px #FF0000,
+      0 0 16px #FF0000;
+    border-color: #FF0000;
+  }
+
+  100% {
+    box-shadow: 0 0 4px #FF0000,
+      0 0 8px #FF0000;
+    border-color: #FF0000;
+  }
+}
+
+/* Share button styles */
+#shareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+.control-share-button {
+  margin-top: 0.5rem !important;
+  /* Further reduced from 0.7rem by ~30% */
+}
+
+#shareButton:hover {
+  background-color: var(--bg-secondary);
+}
+
+#shareButton.completed-glow {
+  color: var(--highlight-blue);
+  border-color: var(--highlight-blue);
+  animation: blueGlowingButton 2s infinite;
+}
+
+#shareButton.completed-glow:hover {
+  background: var(--highlight-blue);
+  color: var(--bg-primary);
+}
+
+/* Ghost button glow effect (green outline like before) */
+#ghostSettingsBtn.completed-glow {
+  box-shadow: 0 0 8px #2ecc71, 0 0 16px rgba(46, 204, 113, 0.6);
+  border-color: #2ecc71;
+}
+
+#ghostSettingsBtn.completed-glow:hover {
+  background: var(--bg-secondary);
+  border-color: #2ecc71;
+}
+
+#ghostSettingsBtn img {
+  transition: filter 0.3s ease;
+}
+
+[data-theme="dark"] #ghostSettingsBtn img {
+  filter: invert(1);
+}
+
+@media (max-width: 800px) {
+  #shareButton {
+    padding: 0.35rem;
+  }
+}
+
+/* Share card styles */
+.share-card {
+  position: relative;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  box-shadow: none;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 0;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+@media (max-width: 800px) {
+  .share-modal .share-card {
+    width: 92%;
+    padding: 0.5rem;
+    max-height: 90vh;
+  }
+}
+
+.share-card-preview {
+  width: 500px;
+  height: 500px;
+  max-width: 100%;
+  max-height: 100%;
+  border: 2px solid var(--border);
+  object-fit: contain;
+}
+
+@media (max-width: 800px) {
+  .share-card-preview {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.share-card-buttons {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.share-card-buttons .pixel-button {
+  flex: 1;
+}
+
+/* Unified Close Button Styles for All Modals with SVG Icon */
+.modal-close {
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  width: 50px;
+  height: 50px;
+  background: #FF0000;
+  border: 2px solid var(--border);
+  color: var(--bg-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  box-shadow: none;
+  z-index: 1001;
+  border-radius: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.modal-close:hover {
+  /* Removed layout-shifting transform */
+  filter: brightness(1.1);
+  box-shadow: none;
+  background: #CC0000;
+}
+
+.modal-close:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+  background: #AA0000;
+}
+
+/* SVG icon inside close buttons */
+.modal-close svg {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  /* SVG has its own fill and stroke properties */
+}
+
+/* Mobile-specific adjustments for close buttons */
+@media (max-width: 800px) {
+  .modal-close {
+    top: -25px;
+    right: -25px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .modal-close svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Submit Track Modal Styles */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-blur {
+  display: none;
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  box-shadow: 0 8px 32px 0 rgba(34, 34, 34, 0.18);
+  padding: 32px 28px 24px 28px;
+  width: 92%;
+  max-width: 410px;
+  text-align: center;
+  z-index: 2;
+  font-family: 'IBM Plex Mono', monospace;
+  animation: modalPopIn 0.32s cubic-bezier(.23, 1.12, .32, 1) 1;
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.close-btn {
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  width: 50px;
+  height: 50px;
+  background: #FF0000;
+  border: 2px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  box-shadow: none;
+  z-index: 1001;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.close-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: none;
+  background: #CC0000;
+}
+
+.close-btn:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+  background: #AA0000;
+}
+
+.close-btn svg {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+#submitTrackNameInput {
+  width: 120%;
+  max-width: 95%;
+  padding: 16px 12px;
+  margin-bottom: 0;
+  border: 2px solid var(--border);
+  border-radius: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.08rem;
+  text-align: center;
+  box-sizing: border-box;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.btn {
+  width: 100%;
+  padding: 0.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0.07rem 0;
+}
+
+.btn:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transform: translate(-2px, -2px);
+  box-shadow: none;
+}
+
+.btn:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  border-color: #007bff;
+  color: #007bff;
+  box-shadow: 0 0 6px #007bff, 0 0 10px #007bff;
+}
+
+@keyframes modalPopIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.status-loading {
+  color: #666;
+  font-style: italic;
+}
+
+.status-success {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.status-error {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* Test Track Banner - ensure text stays dark in dark mode */
+.test-track-title {
+  color: #000000 !important;
+}
+
+@media (max-width: 768px) {
+  .close-btn {
+    top: -25px;
+    right: -25px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .close-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .modal .modal-content {
+    width: 92%;
+    padding: 0.5rem;
+  }
+
+  #submitTrackNameInput {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px 8px;
+  }
+}
+
+/* Share modal styles */
+.share-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  /* frosty light overlay */
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Safari/iOS support */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.share-modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.share-modal.visible .share-card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Controls */
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  margin-top: 0.07rem;
+  padding: 0 7.5%;
+  /* Changed from 15% to 7.5% to make buttons 15% closer instead of 30% */
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .controls-grid {
+    padding: 0 5%;
+    /* Reduced padding on mobile for more space */
+    margin-top: 0.05rem;
+    /* Reduced from 0.1rem to move controls closer to start button */
+  }
+}
+
+.control-item {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: unset;
+  cursor: pointer;
+  transition: none;
+  width: 100%;
+  height: 100%;
+}
+
+.control-item:first-child {
+  justify-content: flex-end;
+  /* Align left button to the right */
+  padding-right: 2.5%;
+  /* Reduced from 5% to 2.5% for more balanced spacing */
+}
+
+.control-item:last-child {
+  justify-content: flex-start;
+  /* Align right button to the left */
+  padding-left: 2.5%;
+  /* Reduced from 5% to 2.5% for more balanced spacing */
+}
+
+.control-item:active,
+.control-item.pressed {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  /* Removed glow effect */
+  transform: translateY(4px);
+  /* Reduced movement from 6px to 4px */
+}
+
+.control-item:hover {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.control-image {
+  width: 100%;
+  height: auto;
+  /* Changed from 100% to auto to maintain aspect ratio */
+  object-fit: contain;
+  max-width: 150px;
+  max-height: 120px;
+  /* Reduced from 150px to 120px */
+  display: block;
+  padding: 0;
+  margin: 0 auto;
+  /* Center the image */
+  -webkit-touch-callout: none;
+  /* Prevent iOS callout */
+  -webkit-user-select: none;
+  /* Prevent selection */
+  -webkit-user-drag: none;
+  /* Prevent dragging */
+  user-select: none;
+  /* Prevent selection */
+  pointer-events: none;
+  /* Prevent pointer events */
+}
+
+[data-theme="dark"] .control-image {
+  filter: invert(1);
+}
+
+@media (max-width: 800px) {
+  .control-item {
+    min-height: unset;
+    padding: 0;
+  }
+
+  .control-image {
+    max-width: 126px;
+    max-height: 108px;
+    padding: 0;
+  }
+}
+
+.key {
+  display: inline-block;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 0.4rem 0.6rem;
+  border: 2px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.action {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  /* Further reduced from 0.17rem by 30% */
+  padding: 0.4rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  height: 100%;
+  padding: 0.35rem;
+  max-height: 75vh;
+  /* Updated to match game screen */
+  overflow-y: auto;
+  box-shadow: none;
+}
+
+@media (max-width: 800px) {
+  .controls-panel {
+    gap: 0.04rem;
+    /* Reduced by 50% from 0.08rem for tighter spacing */
+  }
+}
+
+@media (max-width: 800px) {
+  .controls-panel {
+    position: relative;
+    /* Change from fixed to relative */
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    /* Full width */
+    margin: 0 auto;
+    height: auto;
+    max-height: 35vh;
+    /* Limit height */
+    padding: 0.5rem;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /* Disable horizontal scrolling */
+    z-index: 10;
+  }
+}
+
+.player-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+@media (max-width: 800px) {
+  .player-setup {
+    gap: 0.05rem;
+    /* Reduced by 50% from 0.1rem */
+  }
+}
+
+.track-select {
+  margin-bottom: 0.15rem;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowingButton {
+  0% {
+    box-shadow: 0 0 5px var(--accent),
+      0 0 10px var(--accent),
+      0 0 15px var(--accent);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  50% {
+    box-shadow: 0 0 10px var(--accent),
+      0 0 20px var(--accent),
+      0 0 25px var(--accent);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  100% {
+    box-shadow: 0 0 5px var(--accent),
+      0 0 10px var(--accent),
+      0 0 15px var(--accent);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+/* Media queries */
+@media (max-height: 760px) {
+  .game-container {
+    height: 100vh;
+    padding: 0.25rem 0.15rem;
+    gap: 0.15rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    padding: 1rem 0 0;
+    margin-bottom: 0.05rem;
+  }
+
+  .tagline {
+    font-size: 0.8rem;
+    margin-bottom: 0.05rem;
+  }
+
+  .controls-panel {
+    gap: 0.15rem;
+  }
+
+  .control-item {
+    padding: 0.1rem;
+  }
+
+  select,
+  input,
+  .pixel-button {
+    padding: 0.25rem;
+    margin-bottom: 0.1rem;
+    font-size: 0.8rem;
+  }
+
+  .key,
+  .action {
+    font-size: 0.65rem;
+  }
+}
+
+/* Even smaller screens */
+@media (max-height: 600px) {
+  .game-container {
+    padding: 0.15rem 0.1rem;
+    gap: 0.1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    padding: 0.5rem 0 0;
+  }
+
+  .tagline {
+    font-size: 0.7rem;
+  }
+
+  select,
+  input,
+  .pixel-button {
+    font-size: 0.75rem;
+    padding: 0.2rem;
+  }
+
+  .key,
+  .action {
+    font-size: 0.6rem;
+  }
+}
+
+
+
+.x-emoji-link {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 2rem;
+  text-decoration: none;
+  z-index: 10;
+  transition: transform 0.1s;
+}
+
+.x-emoji-link svg {
+  fill: #111;
+  transition: fill 0.3s ease;
+}
+
+[data-theme="dark"] .x-emoji-link svg {
+  fill: #ffffff;
+}
+
+.x-emoji-link:hover {
+  transform: scale(1.15) rotate(-10deg);
+  text-shadow: 0 2px 8px #0002;
+}
+
+@media (max-width: 800px) {
+  .x-emoji-link {
+    top: 8px;
+    right: 10px;
+    font-size: 1.5rem;
+  }
+}
+
+/* Loading Screen Styles */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-f1-car {
+  width: 80px;
+  height: 80px;
+  animation: pulsate 2s ease-in-out infinite;
+  image-rendering: pixelated;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Hamburger Menu Styles */
+#hamburger {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: none;
+  border: none;
+  outline: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  transition: left 0.6s ease, top 0.6s ease, background 0.6s ease, border-radius 0.6s ease;
+}
+
+#hamburger.panel-open {
+  position: fixed;
+  top: 12px;
+  right: auto;
+  left: 188px;
+  z-index: 301;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] #hamburger.panel-open {
+  background: #252525;
+}
+
+#hamburger.panel-open .hamburger-bar {
+  background: #333;
+}
+
+[data-theme="dark"] #hamburger.panel-open .hamburger-bar {
+  background: #ffffff;
+}
+
+.hamburger-bar {
+  width: 28px;
+  height: 3px;
+  background: #444;
+  margin: 3px 0;
+  border-radius: 1px;
+  transition: all 0.7s cubic-bezier(.4, 2, .6, 1);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .hamburger-bar {
+  background: #ffffff;
+}
+
+#hamburger.active .hamburger-bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+  transition: all 0.7s cubic-bezier(.4, 2, .6, 1);
+  background: #333;
+}
+
+[data-theme="dark"] #hamburger.active .hamburger-bar:nth-child(1) {
+  background: #ffffff;
+}
+
+#hamburger.active .hamburger-bar:nth-child(2) {
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(.4, 2, .6, 1);
+}
+
+#hamburger.active .hamburger-bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+  transition: all 0.7s cubic-bezier(.4, 2, .6, 1);
+  background: #333;
+}
+
+[data-theme="dark"] #hamburger.active .hamburger-bar:nth-child(3) {
+  background: #ffffff;
+}
+
+#hamburger:focus {
+  outline: none;
+}
+
+#hamburger:active,
+#hamburger:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+@media (max-width: 800px) {
+  #hamburger {
+    transform: none;
+    transform-origin: top left;
+    width: 32px;
+    height: 32px;
+    transition: left 0.6s ease, top 0.6s ease, background 0.6s ease, border-radius 0.6s ease;
+  }
+
+  #hamburger.panel-open {
+    top: 10px;
+    left: 188px;
+    right: auto;
+  }
+
+  .hamburger-bar {
+    width: 22px;
+    height: 2.2px;
+    margin: 2px 0;
+  }
+
+  #hamburger.active .hamburger-bar:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+    background: #333;
+  }
+
+  #hamburger.active .hamburger-bar:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+    background: #333;
+  }
+}
+
+/* Violation modal styles - matches share modal design */
+.violation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  /* Same frosty overlay as share modal */
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Safari/iOS support */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.violation-modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.violation-modal.visible .violation-card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.violation-card {
+  position: relative;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  box-shadow: none;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 500px;
+  max-height: 90vh;
+  border-radius: 0;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  text-align: center;
+}
+
+.violation-card h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.violation-card p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.violation-details {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.violation-card .pixel-button {
+  width: auto;
+  min-width: 120px;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .violation-card {
+    width: 92%;
+    padding: 1rem;
+    max-height: 90vh;
+  }
+}
+
+/* Ghost Error Modal Styles */
+.ghost-error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.ghost-error-modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ghost-error-card {
+  background: var(--bg-primary);
+  border: 3px solid var(--border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 500px;
+  max-height: 90vh;
+  border-radius: 0;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  text-align: center;
+}
+
+.ghost-error-card h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ghost-error-card p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ghost-error-card .pixel-button {
+  width: auto;
+  min-width: 120px;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .ghost-error-card {
+    width: 92%;
+    padding: 1rem;
+    max-height: 90vh;
+  }
+
+  /* Additional mobile optimizations for better UX */
+  /* Prevent horizontal scrolling on mobile */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Improve touch targets for mobile - reduced height by 20% */
+  .pixel-button,
+  select,
+  input,
+  .control-item {
+    min-height: 35px;
+    /* Reduced from 44px by 20% for more vertical space */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Better text sizing for mobile readability */
+  .tagline,
+  .best-lap,
+  .previous-lap,
+  .leaderboard-title {
+    font-size: 0.9rem;
+  }
+
+  /* Optimize spacing for mobile */
+  .game-container {
+    gap: 0.5rem;
+  }
+
+  /* Hide labels on smaller mobile screens to save space */
+  .input-group label {
+    display: none !important;
+  }
+
+  /* Specifically hide Constructor label on mobile to prevent overlapping */
+  .input-group label[for="teamSelect"] {
+    display: none !important;
+  }
+
+  /* Better modal sizing for mobile */
+  .constructor-modal {
+    padding: 10px;
+  }
+
+  .constructor-card {
+    margin: 10px;
+    padding: 15px;
+  }
+}
+
+/* Ensure portrait steering controls are visible by default on mobile */
+@media (max-width: 800px) {
+  .controls-grid.portrait-only {
+    display: flex !important;
+  }
+
+  .steering-controls-landscape {
+    display: none !important;
+  }
+}
+
+/* Mobile Landscape Layout - Canvas on top, steering buttons on left/right of canvas */
+@media (max-width: 800px) and (orientation: landscape) {
+
+  html,
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .game-container {
+    height: auto !important;
+    min-height: 100vh !important;
+    padding: 0.25rem;
+    gap: 0.15rem;
+    overflow-y: auto !important;
+  }
+
+  /* Hide title elements in landscape to maximize space */
+  .pixel-title-box,
+  .tagline.fade-in,
+  #next-track-time.fade-in,
+  .x-emoji-link {
+    display: none !important;
+  }
+
+  .game-ui {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: calc(100vh - 20px) !important;
+    max-height: none !important;
+    gap: 0.5rem !important;
+    overflow: visible !important;
+  }
+
+  /* Game screen flex container */
+  .game-screen {
+    order: 1 !important;
+    flex: 1 !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: transparent !important;
+  }
+
+  /* Controls panel BELOW the game screen - scrollable */
+  .controls-panel {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0.5rem !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    /* Hide controls panel in landscape when playing, or make it accessible via scroll */
+    /* For now, let it flow naturally below the 100vh game screen */
+  }
+
+  /* Hide portrait steering controls in landscape */
+  .controls-grid.portrait-only {
+    display: none !important;
+  }
+
+  /* Show landscape steering controls - relative positioning in flex container */
+  .steering-controls-landscape {
+    display: flex !important;
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    z-index: 50 !important;
+    flex: 0 0 80px !important;
+    /* Fixed width for button areas */
+    height: 100% !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .steering-left {
+    order: 1 !important;
+    left: auto !important;
+  }
+
+  .steering-right {
+    order: 3 !important;
+    right: auto !important;
+  }
+
+  .steering-controls-landscape .control-item {
+    width: 60px !important;
+    height: 60px !important;
+    margin: 0 !important;
+    padding: 8px !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    /* More transparent */
+    border: 2px solid rgba(0, 0, 0, 0.5) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    touch-action: none !important;
+    /* Disable browser gestures */
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    pointer-events: auto !important;
+  }
+
+  .steering-controls-landscape .control-item:active {
+    /* Remove :active behavior to rely on JS .pressed class for visual feedback */
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .steering-controls-landscape .control-item.pressed {
+    background: rgba(0, 102, 255, 0.4) !important;
+    transform: scale(0.92) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .steering-controls-landscape .control-image {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    pointer-events: none !important;
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+  }
+
+  /* Canvas sizing - flex item in middle */
+  #gameCanvas {
+    order: 2 !important;
+    flex: 1 !important;
+    width: auto !important;
+    /* Let flex determine width */
+    height: 100% !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    object-fit: contain !important;
+  }
+
+  /* Show mobile stats bar in landscape - positioned absolutely at top */
+  .mobile-top-stats {
+    display: grid !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+  }
+
+  /* Show minimize/expand toggle in landscape */
+  .mobile-stats-toggle {
+    display: flex !important;
+  }
+
+  /* Hide regular stats in landscape - using mobile stats instead */
+  .stats {
+    display: none !important;
+  }
+
+  #lap-timer {
+    display: none !important;
+  }
+
+  /* Controls panel content - vertical layout */
+  .player-setup {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+  }
+
+  .input-group {
+    margin-bottom: 0.15rem !important;
+  }
+
+  .pixel-button,
+  select,
+  input {
+    font-size: 0.75rem !important;
+    padding: 0.25rem !important;
+    margin-bottom: 0.1rem !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  #startButton {
+    width: 100% !important;
+    height: 36px !important;
+    order: -1 !important;
+    /* Move to top */
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Show share button in landscape */
+  #shareButton {
+    display: flex !important;
+  }
+
+  /* Show ghost settings in landscape */
+  .ghost-button-container {
+    display: flex !important;
+  }
+
+  /* Hide in-game leaderboard in landscape to save space */
+  .in-game-leaderboard {
+    display: none !important;
+  }
+
+  /* Adjust constructor modal for landscape */
+  .constructor-modal {
+    padding: 5px;
+  }
+
+  .constructor-card {
+    margin: 5px;
+    padding: 10px;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .constructor-option {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Wrapped Page Styles */
+.wrapped-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--bg-primary);
+  font-family: 'IBM Plex Mono', monospace;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.wrapped-intro {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.wrapped-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.wrapped-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  border: 2px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.wrapped-loading,
+.wrapped-error,
+.wrapped-no-records {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.wrapped-loading .loading-car {
+  animation: pulsate 2s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+.wrapped-slides {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  min-height: 600px;
+  height: auto;
+  overflow: visible;
+}
+
+.wrapped-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 600px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wrapped-final-slide {
+  position: absolute !important;
+  min-height: 700px;
+  height: auto;
+  background: var(--bg-primary) !important;
+}
+
+.wrapped-final-slide.active {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  pointer-events: auto !important;
+  z-index: 10 !important;
+}
+
+.wrapped-final-content {
+  max-width: 100%;
+  overflow: visible;
+  padding: 2rem 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.wrapped-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.wrapped-slide.past {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.wrapped-slide-content {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  animation: slideIn 0.8s ease-out;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.wrapped-full-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem 1rem;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wrapped-emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.wrapped-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.wrapped-main-stat {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--highlight-blue);
+  margin-bottom: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  animation: countUp 1s ease-out;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wrapped-sub-stat {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  padding: 0 1rem;
+  line-height: 1.4;
+}
+
+.wrapped-track-preview {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapped-track-canvas {
+  border: 2px solid var(--border);
+  background: var(--bg-secondary);
+  image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
+}
+
+.wrapped-car-image {
+  margin-bottom: 1.5rem;
+  animation: carDrive 2s ease-in-out infinite;
+  image-rendering: pixelated;
+}
+
+@keyframes carDrive {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(10px) rotate(2deg);
+  }
+  75% {
+    transform: translateX(-10px) rotate(-2deg);
+  }
+}
+
+.wrapped-share-text {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin: 1.5rem 0;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.wrapped-share-button {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+}
+
+.wrapped-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.wrapped-nav-button {
+  min-width: 120px;
+}
+
+/* Final slide styles - duplicate removed, using definition above */
+.wrapped-final-content {
+  max-width: 100%;
+  overflow: visible;
+  padding: 2rem 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.wrapped-logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.wrapped-car-image-final {
+  width: 60px !important;
+  height: 60px !important;
+  margin-bottom: 0.5rem;
+  image-rendering: pixelated;
+}
+
+.wrapped-logo-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-top: 0.25rem;
+}
+
+.wrapped-website {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.wrapped-username-final {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--highlight-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.wrapped-final-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 1.5rem 0 1rem 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.wrapped-category {
+  margin: 1.5rem 0;
+}
+
+.wrapped-category-badge {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--highlight-blue);
+  color: white;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 3px solid var(--border);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wrapped-summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wrapped-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.wrapped-summary-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.wrapped-summary-value {
+  font-size: 1.2rem;
+  color: var(--highlight-blue);
+  font-weight: 700;
+  text-align: right;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 50%;
+}
+
+.wrapped-final-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.wrapped-export-button {
+  min-width: 150px;
+}
+
+@media (max-width: 800px) {
+  .wrapped-container {
+    padding: 1rem;
+  }
+
+  .wrapped-slides {
+    height: 500px;
+  }
+
+  .wrapped-title {
+    font-size: 1.5rem;
+  }
+
+  .wrapped-main-stat {
+    font-size: 2rem;
+  }
+
+  .wrapped-emoji {
+    font-size: 3rem;
+  }
+
+  .wrapped-car-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .wrapped-final-title {
+    font-size: 1.8rem;
+  }
+
+  .wrapped-category-badge {
+    font-size: 1.2rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .wrapped-summary-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .wrapped-summary-value {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .wrapped-final-actions {
+    flex-direction: column;
+  }
+
+  .wrapped-share-button,
+  .wrapped-export-button {
+    width: 100%;
+  }
+}
