@@ -1,17 +1,24 @@
 # Hotlap Daily
 
+[![npm build](https://img.shields.io/badge/npm-build-brightgreen?logo=npm)](package.json)
+[![Website](https://img.shields.io/badge/website-hotlapdaily.com-blue)](https://hotlapdaily.com)
+[![Discord](https://img.shields.io/discord/1376557812112560249?label=discord&logo=discord&color=5865F2)](https://discord.gg/nbnYdSSUs)
+[![X](https://img.shields.io/badge/x-%40hotlapdaily-black?logo=x)](https://x.com/hotlapdaily)
+[![Instagram](https://img.shields.io/badge/instagram-%40hotlapdaily-E4405F?logo=instagram)](https://www.instagram.com/hotlapdaily/)
+
+Community driven racing game with new tracks everyday! Check your score live
+on the leaderboard.
+
 A daily browser racing game. Each day a new procedurally‑generated F1‑style
 track goes live; players set the fastest lap they can and submit it to a global
-leaderboard. Built with **Next.js 15 / React 19** for the shell and API, and a
-**vanilla‑JS canvas game engine** served as static modules.
+leaderboard.
 
-> This is the open‑source release. It runs with **zero setup** — no database,
-> no API keys — thanks to a pluggable in‑memory data backend.
+![Hotlap Daily gameplay](docs/hotlapdaily.gif)
 
 ## Quick start
 
 ```bash
-npm install        # also runs `prisma generate` (no DB connection needed)
+npm install
 npm run dev        # http://localhost:3000
 ```
 
