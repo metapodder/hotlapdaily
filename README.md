@@ -2,7 +2,7 @@
 
 [![npm build](https://img.shields.io/badge/npm-build-brightgreen?logo=npm)](package.json)
 [![Website](https://img.shields.io/badge/website-hotlapdaily.com-blue)](https://hotlapdaily.com)
-[![Discord](https://img.shields.io/discord/1376557812112560249?label=discord&logo=discord&color=5865F2)]([https://discord.gg/hSCtAbgcKY](https://discord.com/invite/hSCtAbgcKY))
+[![Discord](https://img.shields.io/discord/1376557812112560249?label=discord&logo=discord&color=5865F2)](https://discord.com/invite/hSCtAbgcKY)
 [![X](https://img.shields.io/badge/x-%40hotlapdaily-black?logo=x)](https://x.com/hotlapdaily)
 [![Instagram](https://img.shields.io/badge/instagram-%40hotlapdaily-E4405F?logo=instagram)](https://www.instagram.com/hotlapdaily/)
 
