@@ -5,6 +5,7 @@ import { CarController } from '/game/physics/controller.js';
 import { AntiCheatSystem, validateAntiCheatIntegrity } from '/game/anticheat/anticheat.js';
 import { sendBestLap } from '/game/net/api.js';
 import '/game/ui/ui.js';
+import { drawPOV, drawMinimap } from '/game/render/draw3d.js';
 import { drawTrack as drawTrackLib, drawPixelCar as drawPixelCarLib, drawDirectionArrow as drawDirectionArrowLib } from '/game/render/draw.js';
 import { updateInGameLeaderboard } from '/game/ui/leaderboard.js';
 import {
@@ -176,6 +177,24 @@ class Game {
     init() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
+
+        // 3D first-person view toggle (visual only)
+        try { this.view3d = localStorage.getItem('hotlapdaily_view3d') === 'true'; } catch { this.view3d = false; }
+        const view3dBtn = document.getElementById('view3dBtn');
+        if (view3dBtn) {
+            view3dBtn.classList.toggle('active', this.view3d);
+            view3dBtn.addEventListener('click', () => {
+                this.view3d = !this.view3d;
+                view3dBtn.classList.toggle('active', this.view3d);
+                try { localStorage.setItem('hotlapdaily_view3d', String(this.view3d)); } catch { }
+                view3dBtn.blur(); // keep Space from re-toggling
+                this.draw();
+            });
+        }
+        const watchBtn = document.getElementById('watchGhostBtn');
+        if (watchBtn) {
+            watchBtn.addEventListener('click', () => { this.toggleReplay(); watchBtn.blur(); });
+        }
 
         // Calculate initial canvas size
         const gameScreen = this.canvas.parentElement;
@@ -670,6 +689,10 @@ class Game {
         document.addEventListener('keydown', (e) => {
             try {
                 switch (e.code) {
+                    case 'KeyV':
+                        if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) break;
+                        document.getElementById('view3dBtn')?.click();
+                        break;
                     case 'Space':
                         if (!this.lapStarted) {
                             this.startLap();
@@ -884,6 +907,7 @@ class Game {
         }
     }
     startLap() {
+        this.replayStart = null; // starting a lap ends any ghost replay
         console.info(`[Game] Lap started on track: ${this.currentTrack?.name}`);
 
         // Reset crash state when starting new lap
@@ -1465,6 +1489,53 @@ class Game {
             return;
         }
 
+        // Get selected team colors
+        const teamSelectEl = document.getElementById('teamSelect');
+        const selectedTeam = teamSelectEl && teamSelectEl.value ? teamSelectEl.value : (this.lastSelectedTeam || 'ferrari');
+        this.lastSelectedTeam = selectedTeam;
+        const teamColor = selectedTeam && this.teamColors[selectedTeam] ? this.teamColors[selectedTeam] : this.teamColors.ferrari;
+
+        // Ghost replay: watch the loaded ghost's lap on its own, ends shortly after the trail does
+        let ghost = null;
+        if (this.replayStart) {
+            const g = this._ghostTrail();
+            if (!g || this._ghostTime() > g.trail[g.trail.length - 1].t + 1000) this.replayStart = null;
+        }
+        if (this.replayStart || this._ghostEnabled) {
+            const pose = this._ghostPose(this._ghostTime());
+            if (pose) ghost = { ...pose, color: this._ghostColor(teamColor) };
+        }
+        const watchBtn = document.getElementById('watchGhostBtn');
+        if (watchBtn) {
+            watchBtn.style.display = this._ghostTrail() && !(this.lapStarted && !this.lapCompleted) ? '' : 'none';
+            watchBtn.textContent = this.replayStart ? '■ STOP' : '▶ GHOST';
+        }
+
+        if (this.view3d) {
+            const yOffset = this.canvas.height * 0.12;
+            const replaying = this.replayStart && ghost;
+            const cam = replaying ? ghost : this.carController.position;
+            const others = !replaying && ghost ? [{ ...ghost, alpha: 0.6 }] : [];
+            drawPOV(this.ctx, this.canvas, this.currentTrack?.checkpoints, cam, yOffset, replaying ? ghost.color : teamColor, others, this.carController.scale);
+            const dots = [];
+            if (ghost) dots.push({ x: ghost.x, y: ghost.y, color: ghost.color.main, alpha: replaying ? 1 : 0.7 });
+            if (!replaying) dots.push({ x: cam.x, y: cam.y, color: teamColor.main });
+            drawMinimap(this.ctx, this.canvas, this.currentTrack?.checkpoints, yOffset, dots);
+        }
+
+        if (this.replayStart) {
+            const who = this.getRaceIdDriverName?.() || 'GHOST';
+            this.ctx.save();
+            this.ctx.fillStyle = 'rgba(0,0,0,0.55)';
+            const h = Math.round(this.canvas.height * 0.06);
+            this.ctx.fillRect(0, this.canvas.height - h, this.canvas.width, h);
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = `bold ${Math.round(h * 0.5)}px monospace`;
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(`REPLAY: ${who} - ${this.formatTime(this._ghostTime())}`, this.canvas.width / 2, this.canvas.height - h * 0.32);
+            this.ctx.restore();
+        }
+
         // Show practice mode banner
         if (this.currentTrack?.isPracticeMode) {
             this.ctx.save();
@@ -1476,6 +1547,11 @@ class Game {
             this.ctx.textAlign = 'center';
             this.ctx.fillText('PRACTICE - times will not be submitted', this.canvas.width / 2, bannerH * 0.72);
             this.ctx.restore();
+        }
+
+        if (this.view3d) {
+            this._updateLapTimerEl();
+            return;
         }
 
         // Draw grid with subtle lines
@@ -1491,20 +1567,14 @@ class Game {
         // drawTrackLib(this.ctx, this.currentTrack.checkpoints, this.canvas);
         this.drawTrack()
 
-        // Get selected team colors
-        const teamSelectEl = document.getElementById('teamSelect');
-        const selectedTeam = teamSelectEl && teamSelectEl.value ? teamSelectEl.value : (this.lastSelectedTeam || 'ferrari');
-        this.lastSelectedTeam = selectedTeam;
-        const teamColor = selectedTeam && this.teamColors[selectedTeam] ? this.teamColors[selectedTeam] : this.teamColors.ferrari;
-
         // Enable pixel-perfect rendering
         this.ctx.imageSmoothingEnabled = false;
 
         // Draw ghost car first (under player car)
         try { this._drawGhostCar(teamColor); } catch { }
 
-        // Draw car
-        drawPixelCarLib(
+        // Draw car (hidden while watching a ghost replay)
+        if (!this.replayStart) drawPixelCarLib(
             this.ctx,
             this.carController.position.x,
             this.carController.position.y,
@@ -1513,8 +1583,14 @@ class Game {
             this.carController.scale
         );
 
-        // Update lap timer display only
-        (function (self) {
+        this._updateLapTimerEl();
+
+        this.ctx.restore();
+    }
+
+    _updateLapTimerEl() {
+        const self = this;
+        {
             const lapTimerEl = document.getElementById('lap-timer');
             if (!lapTimerEl) return;
             if (self.crashed) {
@@ -1529,7 +1605,7 @@ class Game {
                 const currentTime = self.formatTime(self.lapTime);
                 lapTimerEl.textContent = currentTime;
             }
-        })(this);
+        }
 
         // Make sure lap timer is visible on mobile
         if (window.innerWidth <= 768) {
@@ -1540,7 +1616,6 @@ class Game {
             }
         }
 
-        this.ctx.restore();
     }
 
     _getCurrentTrackId() {
@@ -1939,103 +2014,104 @@ class Game {
         } catch { return trail; }
     }
 
+    // Ghost trail in priority order: raceId ghost -> local payload -> best lap
+    _ghostTrail() {
+        const raceIdTrail = Array.isArray(this.raceIdGhostTrail) ? this.raceIdGhostTrail : [];
+        const localTrail = Array.isArray(this.ghostLocalTrail) ? this.ghostLocalTrail : [];
+        const bestTrail = Array.isArray(this.ghostBestTrail) ? this.ghostBestTrail : [];
+        if (raceIdTrail.length > 1) return { trail: raceIdTrail, space: this.raceIdGhostSpace || 'pixel' };
+        if (localTrail.length > 1) return { trail: localTrail, space: this.ghostLocalSpace || 'pixel' };
+        if (bestTrail.length > 1) return { trail: bestTrail, space: this.ghostBestSpace || 'pixel' };
+        return null;
+    }
+
+    // Ghost {x, y, angle} in car space at lap time t, or null if no trail
+    _ghostPose(t) {
+        const g = this._ghostTrail();
+        if (!g) return null;
+        const { trail, space } = g;
+        const currentScale = this.carController?.scale || (Math.min(this.canvas.width, this.canvas.height) / 400);
+        const currentYOffset = this.canvas.height * 0.12;
+        const toPx = (x, y) => space === 'world_norm' ? [x * currentScale, y * currentScale + currentYOffset] : [x, y];
+
+        let idx = trail.findIndex(p => p.t >= t);
+        if (idx === -1) idx = trail.length - 1; // past the end: clamp to final sample
+        if (idx === 0 || trail[idx].t < t) {
+            const p = trail[idx];
+            const [x, y] = toPx(p.x, p.y);
+            return { x, y, angle: p.angle };
+        }
+        const a = trail[idx - 1];
+        const b = trail[idx];
+        const span = Math.max(1, b.t - a.t);
+        const u = Math.max(0, Math.min(1, (t - a.t) / span));
+        const [x, y] = toPx(a.x + (b.x - a.x) * u, a.y + (b.y - a.y) * u);
+        // Angle interpolation (simple)
+        return { x, y, angle: a.angle + (b.angle - a.angle) * u };
+    }
+
+    _ghostColor(teamColor) {
+        let ghostTeamColor = teamColor;
+        try {
+            const teamSelectEl = document.getElementById('teamSelect');
+            const selectedTeam = teamSelectEl && teamSelectEl.value ? teamSelectEl.value : (this.lastSelectedTeam || 'ferrari');
+            const pickDistinctTeam = () => {
+                const teamKeys = Object.keys(this.teamColors || {});
+                // Try a fixed preferred contrasting team first
+                const preferred = ['williams', 'mclaren', 'mercedes', 'red_bull', 'aston_martin', 'alpine', 'haas', 'stake', 'visa_rb', 'ferrari'];
+                for (const key of preferred) {
+                    if (key !== selectedTeam && this.teamColors[key]) return key;
+                }
+                // Fallback to any other team
+                const alt = teamKeys.find(k => k !== selectedTeam);
+                return alt || selectedTeam;
+            };
+            const altKey = pickDistinctTeam();
+            const base = this.teamColors[altKey] || this.teamColors['williams'] || teamColor;
+            // If by any chance main colors match, tweak the hue slightly for visibility
+            const sameMain = base && teamColor && base.main === teamColor.main;
+            if (sameMain) {
+                const tweak = (hex) => {
+                    try {
+                        // simple hue tweak by cycling accents if equal
+                        const palette = ['#FF00FF', '#00FFFF', '#FFD300', '#00FF7F', '#FF4500'];
+                        return { main: palette[Math.floor(Math.random() * palette.length)], accent: '#000000' };
+                    } catch { return { main: '#0000FF', accent: '#FFFFFF' }; }
+                };
+                ghostTeamColor = tweak(base.main);
+            } else {
+                ghostTeamColor = base;
+            }
+        } catch { }
+        return ghostTeamColor;
+    }
+
     _drawGhostCar(teamColor) {
         try {
             // Respect runtime toggle; do not render when disabled
-            if (!this._ghostEnabled) return;
-            // Priority: raceId ghost -> local payload -> best lap -> none
-            const raceIdTrail = Array.isArray(this.raceIdGhostTrail) ? this.raceIdGhostTrail : [];
-            const localTrail = Array.isArray(this.ghostLocalTrail) ? this.ghostLocalTrail : [];
-            const bestTrail = Array.isArray(this.ghostBestTrail) ? this.ghostBestTrail : [];
-            const trail = raceIdTrail.length > 1 ? raceIdTrail : (localTrail.length > 1 ? localTrail : bestTrail);
-            if (!trail || trail.length < 2) return;
-            // Determine coordinate space for current trail
-            const currentSpace = raceIdTrail.length > 1 ? this.raceIdGhostSpace : (localTrail.length > 1 ? this.ghostLocalSpace : this.ghostBestSpace) || 'pixel';
-            const currentScale = this.carController?.scale || (Math.min(this.canvas.width, this.canvas.height) / 400);
-            const currentYOffset = this.canvas.height * 0.12;
-            const t = this.lapStarted ? this.lapTime : 0;
-
-            // Choose a constructor color that is guaranteed different from the player's
-            // Prefer a complementary palette to maximize contrast
-            let ghostTeamColor = teamColor;
-            try {
-                const teamSelectEl = document.getElementById('teamSelect');
-                const selectedTeam = teamSelectEl && teamSelectEl.value ? teamSelectEl.value : (this.lastSelectedTeam || 'ferrari');
-                const pickDistinctTeam = () => {
-                    const teamKeys = Object.keys(this.teamColors || {});
-                    // Try a fixed preferred contrasting team first
-                    const preferred = ['williams', 'mclaren', 'mercedes', 'red_bull', 'aston_martin', 'alpine', 'haas', 'stake', 'visa_rb', 'ferrari'];
-                    for (const key of preferred) {
-                        if (key !== selectedTeam && this.teamColors[key]) return key;
-                    }
-                    // Fallback to any other team
-                    const alt = teamKeys.find(k => k !== selectedTeam);
-                    return alt || selectedTeam;
-                };
-                const altKey = pickDistinctTeam();
-                const base = this.teamColors[altKey] || this.teamColors['williams'] || teamColor;
-                // If by any chance main colors match, tweak the hue slightly for visibility
-                const sameMain = base && teamColor && base.main === teamColor.main;
-                if (sameMain) {
-                    const tweak = (hex) => {
-                        try {
-                            // simple hue tweak by cycling accents if equal
-                            const palette = ['#FF00FF', '#00FFFF', '#FFD300', '#00FF7F', '#FF4500'];
-                            return { main: palette[Math.floor(Math.random() * palette.length)], accent: '#000000' };
-                        } catch { return { main: '#0000FF', accent: '#FFFFFF' }; }
-                    };
-                    ghostTeamColor = tweak(base.main);
-                } else {
-                    ghostTeamColor = base;
-                }
-            } catch { }
-
-            // Find segment for current time
-            let idx = -1;
-            for (let i = 0; i < trail.length; i++) {
-                if (trail[i].t >= t) { idx = i; break; }
-            }
-            if (idx === -1) {
-                // Past the end: clamp to final sample
-                const last = trail[trail.length - 1];
-                const px = currentSpace === 'world_norm' ? (last.x * currentScale) : last.x;
-                const py = currentSpace === 'world_norm' ? (last.y * currentScale + currentYOffset) : last.y;
-                this.ctx.save();
-                this.ctx.globalAlpha = 0.45;
-                drawPixelCarLib(this.ctx, px, py, last.angle, ghostTeamColor, this.carController.scale);
-                this.ctx.restore();
-                return;
-            }
-            if (idx === 0) {
-                const p = trail[0];
-                const px = currentSpace === 'world_norm' ? (p.x * currentScale) : p.x;
-                const py = currentSpace === 'world_norm' ? (p.y * currentScale + currentYOffset) : p.y;
-                this.ctx.save();
-                this.ctx.globalAlpha = 0.45;
-                drawPixelCarLib(this.ctx, px, py, p.angle, ghostTeamColor, this.carController.scale);
-                this.ctx.restore();
-                return;
-            }
-            const a = trail[idx - 1];
-            const b = trail[idx];
-            const span = Math.max(1, b.t - a.t);
-            const u = Math.max(0, Math.min(1, (t - a.t) / span));
-            const lerp = (x, y) => x + (y - x) * u;
-            let x = lerp(a.x, b.x);
-            let y = lerp(a.y, b.y);
-            if (currentSpace === 'world_norm') {
-                x = x * currentScale;
-                y = y * currentScale + currentYOffset;
-            }
-            // Angle interpolation (simple)
-            let ang = a.angle + (b.angle - a.angle) * u;
+            if (!this._ghostEnabled && !this.replayStart) return;
+            const pose = this._ghostPose(this._ghostTime());
+            if (!pose) return;
             this.ctx.save();
-            this.ctx.globalAlpha = 0.45;
-            drawPixelCarLib(this.ctx, x, y, ang, ghostTeamColor, this.carController.scale);
+            this.ctx.globalAlpha = this.replayStart ? 1 : 0.45;
+            drawPixelCarLib(this.ctx, pose.x, pose.y, pose.angle, this._ghostColor(teamColor), this.carController.scale);
             this.ctx.restore();
         } catch (e) {
             // Never break rendering if ghost fails
         }
+    }
+
+    // Lap time the ghost should be at: replay clock while watching, else the player's lap time
+    _ghostTime() {
+        if (this.replayStart) return performance.now() - this.replayStart;
+        return this.lapStarted ? this.lapTime : 0;
+    }
+
+    toggleReplay() {
+        if (this.replayStart) { this.replayStart = null; return; }
+        if (this.lapStarted && !this.lapCompleted) return; // don't hijack a live lap
+        if (!this._ghostTrail()) return;
+        this.replayStart = performance.now();
     }
 
     drawTrack() {
