@@ -3790,3 +3790,8 @@ label {
     width: 100%;
   }
 }
+
+#view3dBtn.active {
+  background: #e10600 !important;
+  color: #fff !important;
+}

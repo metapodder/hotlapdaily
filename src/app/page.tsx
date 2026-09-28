@@ -1033,6 +1033,8 @@ export default function Home() {
               </div>
             </div>
             <canvas id="gameCanvas"></canvas>
+            <button id="watchGhostBtn" className="pixel-button" title="Watch the ghost lap" style={{position:"absolute", right:"4.5rem", bottom:"0.75rem", zIndex:5, width:"auto", padding:"0.4rem 0.8rem", display:"none"}}>▶ GHOST</button>
+            <button id="view3dBtn" className="pixel-button" title="Toggle 3D driver view (V)" style={{position:"absolute", right:"0.75rem", bottom:"0.75rem", zIndex:5, width:"auto", padding:"0.4rem 0.8rem"}}>3D</button>
           </div>
         </div>
       </div>
