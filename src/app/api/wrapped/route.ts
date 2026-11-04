@@ -207,23 +207,25 @@ export async function GET(request: NextRequest) {
     let longestStreak = 0;
     let tempStreak = 0;
 
-    // Calculate current streak (from today backwards)
-    const today = new Date();
+    // Calculate current streak: consecutive days up to today.
+    // A day still in progress must not break the streak — only a fully missed
+    // day does — so if there is no session today, start counting from yesterday.
+    const toUtcDateKey = (d: Date): string =>
+      `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(
+        d.getUTCDate()
+      ).padStart(2, "0")}`;
 
-    const checkDate = new Date(today);
-    let consecutive = true;
+    const playedDates = new Set(sortedDates);
+    const checkDate = new Date();
 
-    while (consecutive) {
-      const checkUtc = `${checkDate.getUTCFullYear()}-${String(
-        checkDate.getUTCMonth() + 1
-      ).padStart(2, "0")}-${String(checkDate.getUTCDate()).padStart(2, "0")}`;
+    // If today has no session the streak may still be alive; begin at yesterday.
+    if (!playedDates.has(toUtcDateKey(checkDate))) {
+      checkDate.setUTCDate(checkDate.getUTCDate() - 1);
+    }
 
-      if (sortedDates.includes(checkUtc)) {
-        currentStreak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        consecutive = false;
-      }
+    while (playedDates.has(toUtcDateKey(checkDate))) {
+      currentStreak++;
+      checkDate.setUTCDate(checkDate.getUTCDate() - 1);
     }
 
     // Calculate longest streak
